@@ -23,9 +23,9 @@ class DDQN(nn.Module):
             nn.Conv2d(64, 64, kernel_size=3, stride=1),
             nn.ReLU(),
             nn.Flatten(),
-            nn.Linear(3136, 512),
+            nn.Linear(3136, 256),
             nn.ReLU(),
-            nn.Linear(512, action_dim)
+            nn.Linear(256, action_dim)
         )
 
         self.Q_target = deepcopy(self.Q_estimate)
@@ -54,10 +54,14 @@ class Agent:
         model = torch.load(path, map_location="cpu")
         self.net.load_state_dict(model["state_dict"])
         
+    def preprocessing(self, state):
+        return np.float32(state) / 255.0
+        
     def act(self, observation) -> int: # give frame stack return action
         obs = np.array(observation, dtype='uint8')
         resized_image = cv.resize(obs, (84, 84), interpolation=cv.INTER_AREA) 
         state = cv.cvtColor(resized_image, cv.COLOR_BGR2GRAY)
+        state = self.preprocessing(state)
 
         # maintain queue
         if self.framestack.full():
@@ -67,6 +71,7 @@ class Agent:
                 actions = self.net(state, model="estimate")
 
             if self.check_framestack(state):
+                print("true")
                 action = 3
             elif np.random.rand() < 0.1:
                 action = np.random.randint(self.action_dim)
