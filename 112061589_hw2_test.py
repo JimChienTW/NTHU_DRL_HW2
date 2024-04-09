@@ -48,7 +48,7 @@ class Agent:
         self.framestack = queue.Queue(maxsize=4)
         # Setup Q network
         self.net = DDQN(self.state_dim, self.action_dim).float().to("cpu")
-        self.load(path = "/Users/jimchien/Desktop/Curriculum/11220/DeepReinforcementLearning_CS5657/hw2/112061589_hw2/112061589_hw2_data.py")
+        self.load(path = "./112061589_hw2_data.py")
         
     def load(self, path):
         model = torch.load(path, map_location="cpu")
