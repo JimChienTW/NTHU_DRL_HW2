@@ -68,16 +68,15 @@ class Agent:
                 actions = self.net(state, model="estimate")
 
             if self.check_framestack(state):
-                print("true")
                 action = 3
-            elif np.random.rand() < 0.05:
+            elif np.random.rand() < 0.1:
                 action = np.random.randint(self.action_dim)
             else:    
                 action = torch.argmax(actions).item()
             
             return action
         else:
-            self.framestack.put(resized_image)
+            self.framestack.put(state)
             return 3
         
     def check_framestack(self, state):
@@ -95,7 +94,7 @@ def main():
     state = env.reset()
     agent = Agent()
     
-    """done = False
+    done = False
     total_reward = []
     rewards = 0
     last_life = 2
@@ -111,7 +110,7 @@ def main():
     
     print(f"total reward: {total_reward}")  
     print(f"best reward: {max(total_reward)}")
-    print(f"mean reward: {sum(total_reward) / len(total_reward)}")"""
+    print(f"mean reward: {sum(total_reward) / len(total_reward)}")
     env.close()
     
 if __name__ == "__main__":
