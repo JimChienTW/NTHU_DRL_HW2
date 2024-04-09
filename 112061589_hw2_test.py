@@ -10,7 +10,6 @@ from copy import deepcopy
 
 import queue
 import cv2 as cv
-from PIL import Image
 
 # Network  
 class DDQN(nn.Module):
